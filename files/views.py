@@ -79,7 +79,20 @@ def file_resource(request: HttpRequest, file_id) -> JsonResponse:
     if request.method == 'GET':
         if record.status != UploadedFile.Status.READY:
             return JsonResponse({'message': 'File upload or processing in progress. Please try again later.'}, status=202)
-        return JsonResponse({'file_id': record.id, 'status': record.status, 'content': record.parsed_content})
+        # Optional filtering by query params, e.g. ?id=1&city=Austin
+        content = record.parsed_content or []
+        if request.GET:
+            filters = {k: v for k, v in request.GET.items()}
+            def row_matches(row: Dict[str, Any]) -> bool:
+                for key, expected in filters.items():
+                    value = row.get(key)
+                    if value is None:
+                        return False
+                    if str(value) != expected:
+                        return False
+                return True
+            content = [row for row in content if row_matches(row)]
+        return JsonResponse({'file_id': record.id, 'status': record.status, 'content': content})
     elif request.method == 'DELETE':
         record.delete()
         return JsonResponse({'deleted': True})

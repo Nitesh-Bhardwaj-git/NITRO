@@ -1,0 +1,6 @@
+id,name,email,age,city
+1,Alice Johnson,alice@example.com,30,New York
+2,Bob Smith,bob@example.com,27,Austin
+3,Carol Lee,carol@example.com,45,Seattle
+4,David Kim,david@example.com,38,Chicago
+5,Eva Patel,eva@example.com,22,San Francisco
