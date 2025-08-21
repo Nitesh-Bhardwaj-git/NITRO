@@ -15,7 +15,6 @@ class UploadedFile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.UPLOADING)
     progress = models.PositiveSmallIntegerField(default=0)
-    # Store parsed content as JSON for simplicity
     parsed_content = models.JSONField(null=True, blank=True)
 
     def __str__(self) -> str:

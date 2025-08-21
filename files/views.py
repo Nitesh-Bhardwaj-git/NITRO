@@ -18,13 +18,11 @@ def _parse_file_async(uploaded_file_id: int) -> None:
         file_record.progress = 5
         file_record.save(update_fields=['status', 'progress'])
 
-        # Read file content
         file_record.progress = 20
         file_record.save(update_fields=['progress'])
         with file_record.file.open('rb') as f:
             raw = f.read()
 
-        # Detect CSV and parse
         file_record.progress = 40
         file_record.save(update_fields=['progress'])
         try:
@@ -61,7 +59,6 @@ def files_collection(request: HttpRequest) -> JsonResponse:
                 progress=0,
             )
 
-        # Start background parsing thread
         t = threading.Thread(target=_parse_file_async, args=(record.id,), daemon=True)
         t.start()
         return JsonResponse({'file_id': record.id, 'status': record.status, 'progress': record.progress})
